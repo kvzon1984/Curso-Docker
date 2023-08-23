@@ -1,0 +1,101 @@
+COMANDOS DOCKER:
+	
+	docker pull --> Este comando realiza una descarga de una imagen en particular 
+	
+	docker container run --> levanta un contenedor 
+	
+	docker container run -d --> levanta un contenedor y lo matinen corriendo por detras
+	
+	docker container run -d -p 80:80 --> levanta un contenedor por detras y lo levanta en el puesto 80 de mi computadora y el puerto 80 de docker 
+	
+	docker container ls --> lista los contenedores que estan corriendo 
+	
+	docker container ls -a --> lista todos los contenedores 
+	
+	docker container rm -f elimina los contenedores de forma forzada los que estan corriendo
+	
+	docker container rm elimina los contenedores que no esta corriendo  
+	
+	docker image ls --> lista las imagenes 
+	
+	docker image rm --> elimina las imagenes 
+	
+VARIABLES DE ENTORNOS:
+
+	Estas se ocupan para cuando necesito enviar cierta configuracion al levantar un contenedor
+	
+	-e
+	
+	docker container run -d -p 80:80 -e <NombreVariable>
+	
+	docker container run -d -p 80:80 -e <NombreVariable> 
+	
+	ejemplo:
+		docker container run --name postgres-prueba -e POSTGRES_PASSWORD=postgres -dp 5454:5432 postgres
+	
+	docker container run \
+	--name postgres-alpha \
+	-e POSTGRES_PASSWORD=postgres \
+	-dp 5555:5432 \
+	postgres
+	
+LOGS:
+	Es informacion que la imagen dentro de nuestro contenedor esta emitiendo.
+	
+	docker container logs <container id>
+	
+	docker container logs --follow <container id> / docker container logs -f <container id>  #Esto sigue viendo los tags en tiempo real re vayan apareciendo
+	
+Volumenes:
+	--volume world-db:/var/lib/mysql \
+	
+	
+	docker container run \
+	-dp 3306:3306 \
+	--name world-db \
+	-e MARIADB_USER=example-user \
+	-e MARIADB_PASSWORD=user-password \
+	-e MARIADB_ROOT_PASSWORD=root-secret-password \
+	-e MARIADB_DATABASE=word-db \
+	--volume world-db:/var/lib/mysql \
+	mariadb:jammy
+	
+network:
+	Crea una red
+		docker network create world-app
+	
+	Lista las redes
+		docekr network ls
+	
+	Agrego un container a una red
+		docker network connect world-app world-db
+	
+	Inspecciono la red 
+	
+		docker network inspect world-app
+	 
+	 Para asignarlo a una red al momento de levantar el container 
+	 
+	 docker container run \
+	-dp 3306:3306 \
+	--name world-db \
+	-e MARIADB_USER=example-user \
+	-e MARIADB_PASSWORD=user-password \
+	-e MARIADB_ROOT_PASSWORD=root-secret-password \
+	-e MARIADB_DATABASE=word-db \
+	--volume world-db:/var/lib/mysql \
+	--network world-app \
+	mariadb:jammy
+	
+Bind:
+	docker container run \
+	--name nest-app \
+	-w /app \
+	-p 80:3000 \
+	-v "$(pwd)":/app \
+	node:16-alpine3.16 \
+	sh -c "npm install && npm run start:dev"
+
+	
+	
+	 
